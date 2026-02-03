@@ -42,7 +42,8 @@ class MainFrame(customtkinter.CTkFrame):
         self.colour_variable = customtkinter.StringVar(value="Blue")
         self.colour_select = customtkinter.CTkOptionMenu(self, values=["Header", "Blue", "Cyan", "Green", "Yellow", "Red", "BOLD", "Underline"], command=self.refresh_text, variable=self.colour_variable)
 
-        self.input_entry = customtkinter.CTkTextbox(self) # TODO: bind changing to refresh text
+        self.input_entry = customtkinter.CTkTextbox(self, wrap="word") # TODO: bind changing to refresh text
+        self.input_entry.bind("<KeyRelease>", self.refresh_text)
 
         self.copy_button = customtkinter.CTkButton(self, text="COPY",command=self.copy)
 
@@ -56,32 +57,33 @@ class MainFrame(customtkinter.CTkFrame):
         self.copy_button.grid(row=2, column=0, sticky = "NSEW")
         self.output_box.grid(row=3, column=0, sticky = "NSEW", pady=10)
 
-    def refresh_text(self, new_value = None):
-        print(f"{new_value = }")
+    def refresh_text(self, new_value=None):
+        self.output_box.change_colour(self.colour_variable.get())
+        self.output_box.update_text(self.input_entry.get(0.0, "end"))
 
     def copy(self):
         pass
 
 
-class OutputFrame(customtkinter.CTkFrame):
+class OutputFrame(customtkinter.CTkScrollableFrame):
     def __init__(self, master):
         super().__init__(master)
 
         self.create_widgets()
 
     def create_widgets(self):
-        self.label = customtkinter.CTkLabel(self, text="", fg_color=Colours.colours["Blue"][1])
+        self.label = customtkinter.CTkLabel(self, text="", text_color=Colours.colours["Blue"][1])
 
         self.draw_widgets()
 
     def draw_widgets(self):
-        self.label.grid(row=0, column=0, sticky="NSEW")
+        self.label.grid(row=0, column=0, sticky="NSEW", padx=10, pady=10)
 
     def change_colour(self, new_colour):
-        pass
+        self.label.configure(text_color=Colours.colours[new_colour][1])
 
     def update_text(self, new_text):
-        pass
+        self.label.configure(text=new_text)
 
     def copy(self):
         pass
