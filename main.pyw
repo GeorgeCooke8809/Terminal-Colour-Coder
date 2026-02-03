@@ -1,15 +1,16 @@
 import customtkinter
+import pyperclip
 
 class Colours:
     colours = {
-        "Header": ['\033[95m', "#FFFFFF"],
-        "Blue": ['\033[94m',"#FFFFFF"],
-        "Cyan": ['\033[96m',"#FFFFFF"],
-        "Green": ['\033[92m',"#FFFFFF"],
-        "Yellow": ['\033[93m',"#FFFFFF"],
-        "Red": ['\033[91m',"#FFFFFF"],
+        "Pink": ['\033[95m', "#AF6FBD"],
+        "Blue": ['\033[94m',"#5690E2"],
+        "Cyan": ['\033[96m',"#67B6D7"],
+        "Green": ['\033[92m',"#6FCC92"],
+        "Yellow": ['\033[93m',"#F3F26A"],
+        "Red": ['\033[91m',"#D85945"],
         "Normal": ['\033[0m',"#FFFFFF"],
-        "Bold": ['\033[1m',"#FFFFFF"],
+        "BOLD": ['\033[1m',"#FFFFFF"],
         "Underline": ['\033[4m',"#FFFFFF"]
     }
 
@@ -40,9 +41,9 @@ class MainFrame(customtkinter.CTkFrame):
         self.rowconfigure((1,3), weight=500, minsize=150)
 
         self.colour_variable = customtkinter.StringVar(value="Blue")
-        self.colour_select = customtkinter.CTkOptionMenu(self, values=["Header", "Blue", "Cyan", "Green", "Yellow", "Red", "BOLD", "Underline"], command=self.refresh_text, variable=self.colour_variable)
+        self.colour_select = customtkinter.CTkOptionMenu(self, values=["Pink", "Blue", "Cyan", "Green", "Yellow", "Red", "BOLD", "Underline"], command=self.refresh_text, variable=self.colour_variable)
 
-        self.input_entry = customtkinter.CTkTextbox(self, wrap="word") # TODO: bind changing to refresh text
+        self.input_entry = customtkinter.CTkTextbox(self, wrap="word", font=("Consolas", 20)) # TODO: bind changing to refresh text
         self.input_entry.bind("<KeyRelease>", self.refresh_text)
 
         self.copy_button = customtkinter.CTkButton(self, text="COPY",command=self.copy)
@@ -62,7 +63,10 @@ class MainFrame(customtkinter.CTkFrame):
         self.output_box.update_text(self.input_entry.get(0.0, "end"))
 
     def copy(self):
-        pass
+        colour = self.colour_select.get()
+        text = Colours.colours[colour][0] + self.input_entry.get("0.0", 'end-1c') + Colours.colours["Normal"][0]
+
+        pyperclip.copy(text)
 
 
 class OutputFrame(customtkinter.CTkScrollableFrame):
@@ -72,7 +76,7 @@ class OutputFrame(customtkinter.CTkScrollableFrame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.label = customtkinter.CTkLabel(self, text="", text_color=Colours.colours["Blue"][1])
+        self.label = customtkinter.CTkLabel(self, text="", text_color=Colours.colours["Blue"][1], font=("Consolas", 20))
 
         self.draw_widgets()
 
@@ -80,13 +84,15 @@ class OutputFrame(customtkinter.CTkScrollableFrame):
         self.label.grid(row=0, column=0, sticky="NSEW", padx=10, pady=10)
 
     def change_colour(self, new_colour):
+        if new_colour == "BOLD":
+            self.label.configure(font=("Consolas", 20, "bold"))
+        elif new_colour == "Underline":
+            self.label.configure(font=("Consolas", 20, "underline"))
+            
         self.label.configure(text_color=Colours.colours[new_colour][1])
 
     def update_text(self, new_text):
         self.label.configure(text=new_text)
-
-    def copy(self):
-        pass
 
 
 if __name__ == "__main__":
