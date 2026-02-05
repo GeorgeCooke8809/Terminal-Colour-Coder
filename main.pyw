@@ -3,15 +3,15 @@ import pyperclip
 
 class Colours:
     colours = {
-        "Pink": ['\033[95m', "#AF6FBD"],
-        "Blue": ['\033[94m',"#5690E2"],
-        "Cyan": ['\033[96m',"#67B6D7"],
-        "Green": ['\033[92m',"#6FCC92"],
-        "Yellow": ['\033[93m',"#F3F26A"],
-        "Red": ['\033[91m',"#D85945"],
-        "Normal": ['\033[0m',"#FFFFFF"],
-        "BOLD": ['\033[1m',"#FFFFFF"],
-        "Underline": ['\033[4m',"#FFFFFF"]
+        "Pink": ['\\033[95m', "#AF6FBD"],
+        "Blue": ['\\033[94m',"#5690E2"],
+        "Cyan": ['\\033[96m',"#67B6D7"],
+        "Green": ['\\033[92m',"#6FCC92"],
+        "Yellow": ['\\033[93m',"#F3F26A"],
+        "Red": ['\\033[91m',"#D85945"],
+        "Normal": ['\\033[0m',"#FFFFFF"],
+        "BOLD": ['\\033[1m',"#FFFFFF"],
+        "Underline": ['\\033[4m',"#FFFFFF"]
     }
 
 class App(customtkinter.CTk):
@@ -85,11 +85,11 @@ class OutputFrame(customtkinter.CTkScrollableFrame):
 
     def change_colour(self, new_colour):
         if new_colour == "BOLD":
-            self.label.configure(font=("Consolas", 20, "bold"))
+            self.label.configure(font=("Consolas", 20, "bold"), text_color=Colours.colours["Normal"][1])
         elif new_colour == "Underline":
-            self.label.configure(font=("Consolas", 20, "underline"))
-            
-        self.label.configure(text_color=Colours.colours[new_colour][1])
+            self.label.configure(font=("Consolas", 20, "underline"), text_color=Colours.colours["Normal"][1])
+        else:
+            self.label.configure(text_color=Colours.colours[new_colour][1], font=("Consolas", 20))
 
     def update_text(self, new_text):
         self.label.configure(text=new_text)
